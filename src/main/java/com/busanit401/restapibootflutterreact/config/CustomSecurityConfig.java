@@ -99,6 +99,21 @@ public class CustomSecurityConfig {
                 TokenCheckFilter.class
         );
 
+        // 1. 접근 권한 설정 (이 부분을 추가하세요)
+        http.authorizeHttpRequests(auth -> auth
+                // 회원가입 및 아이디 중복 체크 경로 허용
+                .requestMatchers("/member/register", "/member/check-mid").permitAll()
+
+                // 토큰 생성 및 갱신 경로 허용
+                .requestMatchers("/generateToken", "/refreshToken").permitAll()
+
+                // 정적 리소스 (HTML, CSS, JS 등) 허용
+                .requestMatchers("/apiLogin.html", "/css/**", "/js/**", "/images/**").permitAll()
+
+                // 그 외 모든 요청은 인증 필요
+                .anyRequest().authenticated()
+        );
+
 // CSRF 비활성화
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable()); // REST API 환경에서 CSRF 보호 비활성화
 
@@ -120,7 +135,7 @@ public class CustomSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS")); // OPTIONS 추가
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
 
