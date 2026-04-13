@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+</head>
+<body>
+<h1>Sample Client</h1>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    async function callTest() {
+        try {
+            // API 호출
+            const response = await axios.get("http://localhost:8080/api/sample/doA");
+            return response.data;
+        } catch (e) {
+            // 오류 처리
+            console.error("Error occurred:", e);
+        }
+    }
+
+    // 함수 호출 및 결과 처리
+    callTest()
+        .then(data => console.log(data))
+        .catch(e => console.error("Promise error:", e));
+</script>
+
+</body>
+</html>

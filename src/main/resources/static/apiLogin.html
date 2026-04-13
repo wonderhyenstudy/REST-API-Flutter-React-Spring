@@ -2,20 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Token</title>
 </head>
 <body>
 <button class="btn1">Generate Token</button>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    // 버튼 클릭 이벤트 처리
     document.querySelector(".btn1").addEventListener("click", () => {
-        axios.post("http://localhost:8080/generateToken", {
-            mid: "apiuser100",
-            mpw: "11111"
-        }).then(response => {
-            alert("AccessToken: " + response.data.accessToken);
-        });
-    });
+        const data = {
+            mid: "apiuser10", // 사용자 ID
+            mpw: "11111" // 사용자 비밀번호
+        };
+
+        // Axios를 사용하여 POST 요청 보내기
+        axios.post("http://localhost:8080/generateToken", data)
+            .then(response => {
+                // 성공 응답 처리
+                console.log("Token generated:", response.data);
+                console.log("Token generated:", response.data.accessToken);
+                // alert("Token: " + response.data.accessToken);
+                // 서버 응답에서 토큰 추출
+                const accessToken = response.data.accessToken;
+                const refreshToken = response.data.refreshToken;
+
+                // 로컬 스토리지에 토큰 저장
+                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("refreshToken", refreshToken);
+
+                console.log("Access Token and Refresh Token saved to localStorage.");
+            })
+            .catch(error => {
+                // 오류 응답 처리
+                console.error("Error generating token:", error);
+                alert("Error generating token");
+            });
+    }, false);
 </script>
 </body>
 </html>
