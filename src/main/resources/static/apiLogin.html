@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button class="btn1">Generate Token</button>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    document.querySelector(".btn1").addEventListener("click", () => {
+        axios.post("http://localhost:8080/generateToken", {
+            mid: "apiuser10",
+            mpw: "11111"
+        }).then(response => {
+            alert("AccessToken: " + response.data.accessToken);
+        });
+    });
+</script>
+</body>
+</html>

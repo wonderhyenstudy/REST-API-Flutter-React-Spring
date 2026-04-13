@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.13'
@@ -31,8 +37,43 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // ModelMapper
+    implementation 'org.modelmapper:modelmapper:3.1.0'
+
+    // Swagger UI (SpringDoc OpenAPI)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3'
+
+    // Gson (JSON 파싱)
+    implementation 'com.google.code.gson:gson:2.11.0'
+
+    // jjwt (JWT 라이브러리) - 버전 0.11.5
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    //3, 순서2 Querydsl 이용해서, 동적 sql 다루고, 빌드 패턴이용하고, 자바의 컴파일러 문법 체크 도움도 받기.
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+
+    // 4, 순서4 Querydsl 설정.
+    annotationProcessor(
+            "jakarta.persistence:jakarta.persistence-api",
+            "jakarta.annotation:jakarta.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    )
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+sourceSets {
+
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
+}
+
+compileJava.dependsOn('clean')
